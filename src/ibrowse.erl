@@ -21,14 +21,14 @@
 %% <p>Here are a few sample invocations.</p>
 %%
 %% <code>
-%% ibrowse:send_req("http://intranet/messenger/", [], get). 
+%% ibrowse:send_req("http://intranet/messenger/", [], get).
 %% <br/><br/>
-%% 
-%% ibrowse:send_req("http://www.google.com/", [], get, [], 
+%%
+%% ibrowse:send_req("http://www.google.com/", [], get, [],
 %% 		 [{proxy_user, "XXXXX"},
 %% 		  {proxy_password, "XXXXX"},
 %% 		  {proxy_host, "proxy"},
-%% 		  {proxy_port, 8080}], 1000). 
+%% 		  {proxy_port, 8080}], 1000).
 %% <br/><br/>
 %%
 %%ibrowse:send_req("http://www.erlang.org/download/otp_src_R10B-3.tar.gz", [], get, [],
@@ -48,7 +48,7 @@
 %% ibrowse:send_req("http://www.bbc.co.uk", [], trace).
 %%
 %% <br/><br/>
-%% ibrowse:send_req("http://www.google.com", [], get, [], 
+%% ibrowse:send_req("http://www.google.com", [], get, [],
 %%                   [{stream_to, self()}]).
 %% </code>
 %%
@@ -111,7 +111,7 @@
 		      get_value/3,
 		      do_trace/2
 		     ]).
-		      
+
 -record(state, {trace = false}).
 
 -include("ibrowse.hrl").
@@ -159,7 +159,7 @@ stop() ->
 send_req(Url, Headers, Method) ->
     send_req(Url, Headers, Method, [], []).
 
-%% @doc Same as send_req/3. 
+%% @doc Same as send_req/3.
 %% If a list is specified for the body it has to be a flat list. The body can also be a fun/0 or a fun/1. <br/>
 %% If fun/0, the connection handling process will repeatdely call the fun until it returns an error or eof. <pre>Fun() = {ok, Data} | eof</pre><br/>
 %% If fun/1, the connection handling process will repeatedly call the fun with the supplied state until it returns an error or eof. <pre>Fun(State) = {ok, Data} | {ok, Data, NewState} | eof</pre>
@@ -169,7 +169,7 @@ send_req(Url, Headers, Method) ->
 send_req(Url, Headers, Method, Body) ->
     send_req(Url, Headers, Method, Body, []).
 
-%% @doc Same as send_req/4. 
+%% @doc Same as send_req/4.
 %% For a description of SSL Options, look in the <a href="http://www.erlang.org/doc/apps/ssl/index.html">ssl</a> manpage. If the
 %% HTTP Version to use is not specified, the default is 1.1.
 %% <br/>
@@ -220,15 +220,15 @@ send_req(Url, Headers, Method, Body) ->
 %% ibrowse:send_req("http://www.example.com/cgi-bin/request", [], get, [], [{connect_timeout, 100}], 1000).
 %% </code>
 %% In the above invocation, if the connection isn't established within
-%% 100 milliseconds, the request will fail with 
+%% 100 milliseconds, the request will fail with
 %% <code>{error, conn_failed}</code>.<br/>
 %% If connection setup succeeds, the total time allowed for the
 %% request to complete will be 1000 milliseconds minus the time taken
 %% for connection setup.
 %% </li>
-%% 
+%%
 %% <li> The <code>socket_options</code> option can be used to set
-%% specific options on the socket. The <code>{active, true | false | once}</code> 
+%% specific options on the socket. The <code>{active, true | false | once}</code>
 %% and <code>{packet_type, Packet_type}</code> will be filtered out by ibrowse.  </li>
 %%
 %% <li> The <code>headers_as_is</code> option is to enable the caller
@@ -242,7 +242,7 @@ send_req(Url, Headers, Method, Body) ->
 %%          {response_format,response_format()}|
 %%          {stream_chunk_size, integer()}     |
 %%          {max_pipeline_size, integer()}     |
-%%          {trace, boolean()}                 | 
+%%          {trace, boolean()}                 |
 %%          {is_ssl, boolean()}                |
 %%          {ssl_options, [SSLOpt]}            |
 %%          {pool_name, atom()}                |
@@ -262,7 +262,7 @@ send_req(Url, Headers, Method, Body) ->
 %%          {inactivity_timeout, integer()}    |
 %%          {connect_timeout, integer()}       |
 %%          {socket_options, Sock_opts}        |
-%%          {transfer_encoding, {chunked, ChunkSize}} | 
+%%          {transfer_encoding, {chunked, ChunkSize}} |
 %%          {headers_as_is, boolean()}
 %%
 %% stream_to() = process() | {process(), once}
@@ -279,7 +279,7 @@ send_req(Url, Headers, Method, Body) ->
 send_req(Url, Headers, Method, Body, Options) ->
     send_req(Url, Headers, Method, Body, Options, 30000).
 
-%% @doc Same as send_req/5. 
+%% @doc Same as send_req/5.
 %% All timeout values are in milliseconds.
 %% @spec send_req(Url, Headers::headerList(), Method::method(), Body::body(), Options::optionList(), Timeout) -> response()
 %% Timeout = integer() | infinity
@@ -304,7 +304,7 @@ send_req(Url, Headers, Method, Body, Options, Timeout) ->
 		    true -> {get_value(ssl_options, Options_1, []), true}
 		end,
 	    case ibrowse_lb:spawn_connection(Lb_pid, Parsed_url,
-					     Max_sessions, 
+					     Max_sessions,
 					     Max_pipeline_size,
 					     {SSLOptions, IsSSL}) of
 		{ok, Conn_Pid} ->
@@ -355,7 +355,7 @@ set_dest(_Host, _Port, [H | _]) ->
     exit({invalid_option, H});
 set_dest(_, _, []) ->
     ok.
-    
+
 %% @doc Set the maximum number of connections allowed to a specific Host:Port.
 %% @spec set_max_sessions(Host::string(), Port::integer(), Max::integer()) -> ok
 set_max_sessions(Host, Port, Max) when is_integer(Max), Max > 0 ->
@@ -455,7 +455,7 @@ send_req_direct(Conn_pid, Url, Headers, Method, Body, Options, Timeout) ->
 %% caller. Should be used in conjunction with the
 %% <code>stream_to</code> option
 %% @spec stream_next(Req_id :: req_id()) -> ok | {error, unknown_req_id}
-stream_next(Req_id) ->    
+stream_next(Req_id) ->
     case ets:lookup(ibrowse_stream, {req_id_pid, Req_id}) of
 	[] ->
 	    {error, unknown_req_id};
@@ -474,7 +474,7 @@ trace_off() ->
 %% @doc Turn tracing on for all connections to the specified HTTP
 %% server. Host is whatever is specified as the domain name in the URL
 %% @spec trace_on(Host, Port) -> ok
-%% Host = string() 
+%% Host = string()
 %% Port = integer()
 trace_on(Host, Port) ->
     ibrowse ! {trace, true, Host, Port},
@@ -530,7 +530,7 @@ show_dest_status() ->
 				   )
 				  end
 		  end, Dests).
-					  
+
 %% @doc Shows some internal information about load balancing to a
 %% specified Host:Port. Info about workers spawned using
 %% spawn_worker_process/2 or spawn_link_worker_process/2 is not
@@ -615,7 +615,7 @@ import_config(Filename) ->
     case file:consult(Filename) of
 	{ok, Terms} ->
 	    ets:delete_all_objects(ibrowse_conf),
-	    Fun = fun({dest, Host, Port, MaxSess, MaxPipe, Options}) 
+	    Fun = fun({dest, Host, Port, MaxSess, MaxPipe, Options})
 		     when is_list(Host), is_integer(Port),
 		          is_integer(MaxSess), MaxSess > 0,
 		          is_integer(MaxPipe), MaxPipe > 0, is_list(Options) ->
@@ -625,7 +625,7 @@ import_config(Filename) ->
 			  lists:foreach(
 			    fun({X, Y}) ->
 				    ets:insert(ibrowse_conf,
-					       #ibrowse_conf{key = X, 
+					       #ibrowse_conf{key = X,
 							     value = Y})
 			    end, I);
 		     ({K, V}) ->
@@ -724,7 +724,7 @@ handle_info(all_trace_off, State) ->
     ets:foldl(Fun, undefined, ibrowse_lb),
     ets:select_delete(ibrowse_conf, [{{ibrowse_conf,{trace,'$1','$2'},true},[],['true']}]),
     {noreply, State};
-				  
+
 handle_info({trace, Bool}, State) ->
     put(my_trace_flag, Bool),
     {noreply, State};
@@ -741,7 +741,7 @@ handle_info({trace, Bool, Host, Port}, State) ->
     ets:insert(ibrowse_conf, #ibrowse_conf{key = {trace, Host, Port},
 					   value = Bool}),
     {noreply, State};
-		     
+
 handle_info(_Info, State) ->
     {noreply, State}.
 
